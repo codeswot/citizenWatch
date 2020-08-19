@@ -1,6 +1,5 @@
 import 'package:ctz_wtch/screens/home_feed.dart';
 import 'package:ctz_wtch/screens/login_screen.dart';
-import 'package:ctz_wtch/utils/colors.dart';
 import 'package:ctz_wtch/widgets/button.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
@@ -161,33 +160,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           // email = value;
                         },
                       ),
-                      SizedBox(height: 10),
-                      TextField(
-                        textInputAction: TextInputAction.next,
-                        showCursor: true,
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10.0)),
-                            borderSide: BorderSide(
-                              width: 0,
-                              style: BorderStyle.none,
-                            ),
-                          ),
-                          filled: true,
-                          prefixIcon: Icon(
-                            Icons.home,
-                            color: Color(0xFF666666),
-                            size: defaultIconSize,
-                          ),
-                          fillColor: Color(0xFFF2F3F5),
-                          hintStyle: TextStyle(
-                              color: Color(0xFF666666),
-                              fontFamily: defaultFontFamily,
-                              fontSize: defaultFontSize),
-                          hintText: "Home Address",
-                        ),
-                      ),
+
                       SizedBox(height: 15),
                       GestureDetector(
                         onTap: () {

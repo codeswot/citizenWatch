@@ -11,7 +11,7 @@ class HomeFeed extends StatefulWidget {
 
 class _HomeFeedState extends State<HomeFeed> {
   List<Widget> widgetList = [
-    CtzwPostsView(),
+    CtzwPostView(),
     CtzwNewsView(),
   ];
   @override
