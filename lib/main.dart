@@ -13,6 +13,9 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Citizen Watch',
       theme: ThemeData(
+        accentColor: Color(0xff007dfe),
+        primaryColor: Color(0xff007dfe),
+        splashColor: Color(0xff007dfe),
         backgroundColor: Color(0xffEDEDED),
         scaffoldBackgroundColor: Color(0xffEDEDED),
         visualDensity: VisualDensity.adaptivePlatformDensity,

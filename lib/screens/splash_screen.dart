@@ -1,4 +1,5 @@
 import 'package:ctz_wtch/screens/register_screen.dart';
+import 'package:ctz_wtch/widgets/button.dart';
 import 'package:flutter/material.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -12,11 +13,15 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: RaisedButton(
-          child: Text('Register'),
-          onPressed: () {
-            Navigator.pushNamed(context, RegisterScreen.id);
-          },
+        child: Container(
+          margin: EdgeInsets.all(100),
+          child: AuthButton(
+            height: 60,
+            name: 'Register',
+            onTap: () {
+              Navigator.pushNamed(context, RegisterScreen.id);
+            },
+          ),
         ),
       ),
     );

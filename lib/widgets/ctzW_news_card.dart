@@ -1,27 +1,21 @@
 import 'package:flutter/material.dart';
 
 class CtzwNewsCard extends StatelessWidget {
-  const CtzwNewsCard({
-    Key key,
-    this.onTap,
-    this.photo,
-    this.tag,
-    this.tagColor,
-    this.timeOfNews,
-    this.headLine,
-    this.newsVendor,
-  }) : super(key: key);
-  final Function onTap;
-  final String photo;
-  final String tag;
+  final String imgUrl, title, posturl, tag, timeOfNews, newsSource;
   final Color tagColor;
-  final String timeOfNews;
-  final String headLine;
-  final String newsVendor;
+  CtzwNewsCard(
+      {this.imgUrl,
+      this.title,
+      @required this.posturl,
+      this.tag,
+      this.timeOfNews,
+      this.newsSource,
+      this.tagColor});
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: () {},
       child: Container(
         margin: EdgeInsets.only(
           left: 12.0,
@@ -30,7 +24,7 @@ class CtzwNewsCard extends StatelessWidget {
           bottom: 10.0,
         ),
         width: double.infinity,
-        height: 130.0,
+        height: 150.0,
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(
@@ -47,8 +41,8 @@ class CtzwNewsCard extends StatelessWidget {
                   topLeft: Radius.circular(10),
                   bottomLeft: Radius.circular(10),
                 ),
-                child: Image.asset(
-                  photo,
+                child: Image.network(
+                  imgUrl,
                   fit: BoxFit.cover,
                 ),
               ),
@@ -56,12 +50,10 @@ class CtzwNewsCard extends StatelessWidget {
             Flexible(
               child: Container(
                 padding: EdgeInsets.only(
-                  left: 12.0,
-                  right: 12.0,
-                  top: 12.0,
-                ),
+                    left: 12.0, right: 12.0, top: 12.0, bottom: 12.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -100,7 +92,7 @@ class CtzwNewsCard extends StatelessWidget {
                       child: Container(
                         width: 200,
                         child: Text(
-                          headLine,
+                          title,
                           style: TextStyle(
                             fontSize: 16.0,
                             color: Color(0xff333300),
@@ -114,7 +106,7 @@ class CtzwNewsCard extends StatelessWidget {
                     Align(
                       alignment: Alignment.bottomRight,
                       child: Text(
-                        newsVendor,
+                        newsSource,
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,
                         style: TextStyle(
