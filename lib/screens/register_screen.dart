@@ -3,7 +3,6 @@ import 'package:ctz_wtch/screens/login_screen.dart';
 import 'package:ctz_wtch/widgets/button.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -13,7 +12,6 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-  final firebaseInit = Firebase.initializeApp();
   final _auth = FirebaseAuth.instance;
 
   String email;

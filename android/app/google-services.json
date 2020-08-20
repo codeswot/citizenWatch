@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "981965577223",
+    "firebase_url": "https://citizenwatch-6de93.firebaseio.com",
+    "project_id": "citizenwatch-6de93",
+    "storage_bucket": "citizenwatch-6de93.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:981965577223:android:37aebb6b7d80d1f4975ea2",
+        "android_client_info": {
+          "package_name": "com.example.ctz_wtch"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "981965577223-p6tctepeafirmlils3h26k6vs8gga0vd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCVnyIRAyTuQdbQ_KK_cNZVV5gfTi_7vXM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "981965577223-p6tctepeafirmlils3h26k6vs8gga0vd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
