@@ -3,6 +3,8 @@ import 'package:ctz_wtch/screens/login_screen.dart';
 import 'package:ctz_wtch/widgets/button.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class RegisterScreen extends StatefulWidget {
   static const String id = 'RegisterScreen';
@@ -11,6 +13,13 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
+  final firebaseInit = Firebase.initializeApp();
+  final _auth = FirebaseAuth.instance;
+
+  String email;
+  String password;
+  bool mySpiner = false;
+
   DateTime selectedDate = DateTime.now();
   bool isPicked = false;
   Future<void> _selectDate(BuildContext context) async {
@@ -34,7 +43,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
     double defaultFontSize = 14;
     double defaultIconSize = 17;
     bool _showPassword = true;
-    bool mySpiner = false;
 
     return Scaffold(
       body: ModalProgressHUD(
@@ -157,7 +165,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           hintText: "Email Address",
                         ),
                         onChanged: (value) {
-                          // email = value;
+                          email = value;
                         },
                       ),
 
@@ -244,7 +252,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           hintText: "Password",
                         ),
                         onChanged: (value) {
-                          // password = value;
+                          password = value;
                         },
                       ),
                       SizedBox(
@@ -268,8 +276,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       // ),
                       AuthButton(
                         name: 'REGISTER',
-                        onTap: () {
-                          Navigator.of(context).pushNamed(HomeFeed.id);
+                        onTap: () async{
+                          setState(() {
+                            mySpiner = true;
+                          });
+                          final registeredUser = await _auth.createUserWithEmailAndPassword(email: email, password: password);
+                          if(registeredUser != null){
+                            Navigator.of(context).pushNamed(HomeFeed.id);
+                          }
+                          setState(() {
+                            mySpiner = false;
+                          });
                         },
                       ),
                       SizedBox(

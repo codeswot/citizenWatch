@@ -3,6 +3,8 @@ import 'package:ctz_wtch/screens/register_screen.dart';
 import 'package:ctz_wtch/widgets/button.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 class LogInScreen extends StatefulWidget {
   static const String id = 'LogInScreen';
@@ -11,13 +13,18 @@ class LogInScreen extends StatefulWidget {
 }
 
 class _LogInScreenState extends State<LogInScreen> {
+  final firebaseInit = Firebase.initializeApp();
+  final _auth = FirebaseAuth.instance;
+  String email;
+  String password;
+  bool mySpiner = false;
+
   @override
   Widget build(BuildContext context) {
     String defaultFontFamily = 'Roboto-Light.ttf';
     double defaultFontSize = 14;
     double defaultIconSize = 17;
     bool _showPassword = true;
-    bool mySpiner = false;
 
     return Scaffold(
       body: ModalProgressHUD(
@@ -78,7 +85,7 @@ class _LogInScreenState extends State<LogInScreen> {
                           hintText: "Email Address",
                         ),
                         onChanged: (value) {
-                          // email = value;
+                          email = value;
                         },
                       ),
                       SizedBox(
@@ -126,7 +133,7 @@ class _LogInScreenState extends State<LogInScreen> {
                           hintText: "Password",
                         ),
                         onChanged: (value) {
-                          // password = value;
+                          password = value;
                         },
                       ),
                       SizedBox(
@@ -150,8 +157,19 @@ class _LogInScreenState extends State<LogInScreen> {
                       // ),
                       AuthButton(
                         name: 'LOGIN',
-                        onTap: () {
-                          Navigator.of(context).pushNamed(HomeFeed.id);
+                        onTap: () async {
+                          setState(() {
+                            mySpiner = true;
+                          });
+                          final loggedInUser =
+                              await _auth.signInWithEmailAndPassword(
+                                  email: email, password: password);
+                          if (loggedInUser != null) {
+                            Navigator.of(context).pushNamed(HomeFeed.id);
+                          }
+                          setState(() {
+                            mySpiner = false;
+                          });
                         },
                       ),
                       SizedBox(
