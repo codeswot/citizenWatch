@@ -1,6 +1,6 @@
 import 'package:ctz_wtch/screens/tabViews/news_view.dart';
 import 'package:ctz_wtch/screens/tabViews/post_view.dart';
-import 'package:ctz_wtch/screens/upload_screen.dart';
+import 'package:ctz_wtch/screens/user_profile.dart';
 import 'package:flutter/material.dart';
 
 class HomeFeed extends StatefulWidget {
@@ -21,13 +21,13 @@ class _HomeFeedState extends State<HomeFeed> {
       child: Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
-          // leading: Icon(Icons.home),
           title: Text('CitiZen Watch'),
           actions: [
             IconButton(
-              tooltip: 'Options',
-              onPressed: () {},
               icon: Icon(Icons.more_vert),
+              onPressed: () {
+                Navigator.of(context).pushNamed(UserProfile.id);
+              },
             )
           ],
           bottom: TabBar(tabs: [
@@ -51,16 +51,6 @@ class _HomeFeedState extends State<HomeFeed> {
         ),
         body: TabBarView(
           children: widgetList,
-        ),
-        floatingActionButton: FloatingActionButton(
-          child: Icon(
-            Icons.add,
-          ),
-          onPressed: () {
-            Navigator.of(context).pushNamed(
-              UploadScreen.id,
-            );
-          },
         ),
       ),
     );

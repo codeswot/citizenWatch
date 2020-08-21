@@ -1,3 +1,4 @@
+import 'package:ctz_wtch/screens/upload_screen.dart';
 import 'package:ctz_wtch/screens/video_play_screen.dart';
 import 'package:ctz_wtch/services/geolocation/geolocation_get.dart';
 import 'package:ctz_wtch/utils/text.dart';
@@ -24,24 +25,36 @@ class _CtzwPostViewState extends State<CtzwPostView> {
   Widget build(BuildContext context) {
     getTheLocation();
 
-    return Container(
-      child: ListView.builder(
-        physics: BouncingScrollPhysics(),
-        itemBuilder: (BuildContext ctxt, int index) {
-          return CtzwPostCard(
-            userImage: 'images/profile.png',
-            userName: 'Musa Damu',
-            caption: captionTest1,
-            location: myLocation ?? "",
-            timeOfPost: '10 min ago',
-            isVideo: false,
-            postImage: 'images/lightning.jpg',
-            videoPlayTap: () {
-              Navigator.of(context).pushNamed(VideoPlaySCreen.id);
-            },
+    return Scaffold(
+      body: Container(
+        child: ListView.builder(
+          physics: BouncingScrollPhysics(),
+          itemBuilder: (BuildContext ctxt, int index) {
+            return CtzwPostCard(
+              userImage: 'images/profile.png',
+              userName: 'Musa Damu',
+              caption: captionTest1,
+              location: myLocation ?? "",
+              timeOfPost: '10 min ago',
+              isVideo: false,
+              postImage: 'images/lightning.jpg',
+              videoPlayTap: () {
+                Navigator.of(context).pushNamed(VideoPlaySCreen.id);
+              },
+            );
+          },
+          itemCount: 2,
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(
+          Icons.add,
+        ),
+        onPressed: () {
+          Navigator.of(context).pushNamed(
+            UploadScreen.id,
           );
         },
-        itemCount: 2,
       ),
     );
   }

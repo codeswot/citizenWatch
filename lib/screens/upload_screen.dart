@@ -126,11 +126,6 @@ class _UploadScreenState extends State<UploadScreen> {
                     ),
                   ),
                   filled: true,
-                  prefixIcon: Icon(
-                    Icons.mail,
-                    color: Color(0xFF666666),
-                    size: defaultIconSize,
-                  ),
                   fillColor: Color(0xFFF2F3F5),
                   hintStyle: TextStyle(
                       color: Color(0xFF666666),
@@ -142,6 +137,7 @@ class _UploadScreenState extends State<UploadScreen> {
                   // email = value;
                 },
               ),
+              SizedBox(height: 16.5),
               AuthButton(
                 name: 'UPLOAD',
                 onTap: () {},
