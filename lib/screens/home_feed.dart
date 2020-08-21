@@ -1,6 +1,7 @@
 import 'package:ctz_wtch/screens/tabViews/news_view.dart';
 import 'package:ctz_wtch/screens/tabViews/post_view.dart';
 import 'package:ctz_wtch/screens/user_profile.dart';
+import 'package:ctz_wtch/widgets/custom_dialog.dart';
 import 'package:flutter/material.dart';
 
 class HomeFeed extends StatefulWidget {
@@ -26,7 +27,17 @@ class _HomeFeedState extends State<HomeFeed> {
             IconButton(
               icon: Icon(Icons.more_vert),
               onPressed: () {
-                Navigator.of(context).pushNamed(UserProfile.id);
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) => CustomDialog(
+                    image:
+                        'https://avatars3.githubusercontent.com/u/40618838?s=460&v=4',
+                    name: 'Musa Damu',
+                    email: "MusaDamsu@dj.com",
+                    buttonText: "SIGNOUT",
+                    signOut: () {},
+                  ),
+                );
               },
             )
           ],
