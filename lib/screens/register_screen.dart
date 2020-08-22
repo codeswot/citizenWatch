@@ -1,5 +1,6 @@
 import 'package:ctz_wtch/screens/home_feed.dart';
 import 'package:ctz_wtch/screens/login_screen.dart';
+import 'package:ctz_wtch/services/databaseService.dart';
 import 'package:ctz_wtch/widgets/button.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
@@ -16,6 +17,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   String email;
   String password;
+  String firstName;
+  String lastName;
+  String fullName;
   bool mySpiner = false;
 
   DateTime selectedDate = DateTime.now();
@@ -98,7 +102,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 hintText: "First Name",
                               ),
                               onChanged: (value) {
-                                // firstName = value;
+                                firstName = value;
                               },
                             ),
                           ),
@@ -129,7 +133,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 hintText: "Last Name",
                               ),
                               onChanged: (value) {
-                                // lastName = value;
+                                lastName = value;
                               },
                             ),
                           ),
@@ -279,6 +283,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             mySpiner = true;
                           });
                           final registeredUser = await _auth.createUserWithEmailAndPassword(email: email, password: password);
+                          await DatabaseService(uid: registeredUser.user.uid).updateUserData(fullName = firstName + ' ' + lastName);
                           if(registeredUser != null){
                             Navigator.of(context).pushNamed(HomeFeed.id);
                           }
