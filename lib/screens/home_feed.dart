@@ -1,8 +1,10 @@
 import 'package:ctz_wtch/screens/tabViews/news_view.dart';
 import 'package:ctz_wtch/screens/tabViews/post_view.dart';
-import 'package:ctz_wtch/screens/user_profile.dart';
+// import 'package:ctz_wtch/screens/user_profile.dart';
 import 'package:ctz_wtch/widgets/custom_dialog.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:ctz_wtch/services/databaseService.dart';
 
 class HomeFeed extends StatefulWidget {
   static const String id = 'HomeFeed';
@@ -11,11 +13,19 @@ class HomeFeed extends StatefulWidget {
 }
 
 class _HomeFeedState extends State<HomeFeed> {
+  Future<User> email = DatabaseService().getUserEmail();
+  Future displayName = DatabaseService().getDoc('pSmagK2GfWZFJttoV2SonIYwKBk1');
+  Future<String> id = DatabaseService().getCurrentUID();
+  
   List<Widget> widgetList = [
     CtzwPostView(),
     CtzwNewsView(),
   ];
   @override
+  initState(){
+    super.initState();
+    print(id);
+  }
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 2,
@@ -29,13 +39,23 @@ class _HomeFeedState extends State<HomeFeed> {
               onPressed: () {
                 showDialog(
                   context: context,
-                  builder: (BuildContext context) => CustomDialog(
-                    image:
-                        'https://avatars3.githubusercontent.com/u/40618838?s=460&v=4',
-                    name: 'Musa Damu',
-                    email: "MusaDamsu@dj.com",
-                    buttonText: "SIGNOUT",
-                    signOut: () {},
+                  builder: (BuildContext context) => FutureBuilder(
+                    future: email,
+                    builder: (context, snapshot) {
+                      if (!snapshot.hasData) {
+                        return Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }
+                      return CustomDialog(
+                        image:
+                            'https://avatars3.githubusercontent.com/u/40618838?s=460&v=4',
+                        name: 'Na mairo',
+                        email: '${snapshot.data.email}',
+                        buttonText: "SIGNOUT",
+                        signOut: () {},
+                      );
+                    },
                   ),
                 );
               },

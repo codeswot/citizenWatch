@@ -1,9 +1,11 @@
 import 'dart:io';
 
 // import 'package:ctz_wtch/services/databaseService.dart';
+import 'package:ctz_wtch/services/databaseService.dart';
 import 'package:ctz_wtch/widgets/button.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:image_cropper/image_cropper.dart';
+// import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 // class UploadScreen extends StatefulWidget {
@@ -30,53 +32,55 @@ class UploadScreen extends StatefulWidget {
 
 class _UploadScreenState extends State<UploadScreen> {
   final _auth = FirebaseAuth.instance;
-  // final currentUser = FirebaseAuth.instance.currentUser;
   User loggedInUser;
+  Future email = DatabaseService().getUserEmail();
 
+  final FirebaseStorage _storage =
+      FirebaseStorage(storageBucket: 'gs://citizenwatch-6de93.appspot.com/');
+  StorageTaskSnapshot uploadTask;
 
-
-  Future<User> getUserEmail() async {
+  String getUid() {
     final user = _auth.currentUser;
     if (user != null) {
       loggedInUser = user;
+      print(loggedInUser.uid);
     }
-    return loggedInUser;
-  }
-
-  // String getUid() {
-  //   final user = currentUser;
-  //   if (user != null) {
-  //     loggedInUser = user;
-  //      print(loggedInUser.uid);
-  //   }
-  //   return loggedInUser.uid;
-  // }
-
-  Future<String> getCurrentUID() async{
-    return (_auth.currentUser).uid;
+    return loggedInUser.uid;
   }
 
   File _image;
-  final _picker = ImagePicker();
+  // final _picker = ImagePicker();
 
-  getImageFile(ImageSource source) async {
-    //Clicking or Picking from Gallery
+  // getImageFile(ImageSource source) async {
+  //   //Clicking or Picking from Gallery
 
-    var image = await _picker.getImage(source: source);
+  //   var image = await _picker.getImage(source: source);
 
-    //Cropping the image
+  //   //Cropping the image
 
-    File croppedFile = await ImageCropper.cropImage(
-      sourcePath: image.path,
-      maxWidth: 512,
-      maxHeight: 512,
-    );
+  //   File croppedFile = await ImageCropper.cropImage(
+  //     sourcePath: image.path,
+  //     maxWidth: 512,
+  //     maxHeight: 512,
+  //   );
+
+  //   setState(() {
+  //     _image = croppedFile;
+  //     print(_image.lengthSync());
+  //     print('test');
+  //   });
+  // }
+
+  Future<void> getImage(ImageSource source) async {
+    final pickedImage = await ImagePicker().getImage(source: source);
 
     setState(() {
-      _image = croppedFile;
-      print(_image.lengthSync());
-      print('test');
+      _image = File(pickedImage.path);
     });
+  }
+
+  void _uploadPic() async{
+    uploadTask = await _storage.ref().child('images/${DateTime.now()}.png').putFile(_image).onComplete;
   }
 
   String dropdownValue;
@@ -90,7 +94,7 @@ class _UploadScreenState extends State<UploadScreen> {
     double defaultFontSize = 14;
     double defaultIconSize = 17;
     return FutureBuilder(
-      future: getUserEmail(),
+      future: email,
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return Center(
@@ -111,7 +115,7 @@ class _UploadScreenState extends State<UploadScreen> {
                   fontFamily: 'Montserrat'),
             ),
           ),
-          body: Column(
+          body: ListView(
             children: <Widget>[
               Container(
                 width: double.infinity,
@@ -156,6 +160,15 @@ class _UploadScreenState extends State<UploadScreen> {
                       SizedBox(height: 16.5),
                       Text(snapshot.data.email),
                       SizedBox(height: 16.5),
+                      Container(
+                        width: double.infinity,
+                        margin: EdgeInsets.all(15.0),
+                        padding: EdgeInsets.all(35.0),
+                        child: (_image != null)
+                            ? Image.file(_image, fit: BoxFit.fill)
+                            : Text('Firestore Image will appear here!'),
+                      ),
+                      SizedBox(height: 16.5),
                       TextField(
                         maxLines: 5,
                         minLines: 2,
@@ -191,20 +204,20 @@ class _UploadScreenState extends State<UploadScreen> {
                       AuthButton(
                         name: 'UPLOAD',
                         onTap: () {
-                          getImageFile(ImageSource.gallery);
+                          getImage(ImageSource.gallery);
+                          // uploadPicToFirestore(context);
                         },
                       ),
                     ],
                   ),
                 ),
               ),
-              Container(
-                width: double.infinity,
-                margin: EdgeInsets.all(15.0),
-                padding: EdgeInsets.all(25.0),
-                child: (_image != null)
-                    ? Image.file(_image, fit: BoxFit.fill)
-                    : null,
+              AuthButton(
+                name: 'POST',
+                onTap: (){
+                  _uploadPic();
+                },
+                width: 20.0,
               ),
             ],
           ),
