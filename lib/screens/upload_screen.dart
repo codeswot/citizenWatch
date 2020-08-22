@@ -53,7 +53,7 @@ class _UploadScreenState extends State<UploadScreen> {
   // }
 
   Future<String> getCurrentUID() async{
-    return ( _auth.currentUser).uid;
+    return (_auth.currentUser).uid;
   }
 
   File _image;

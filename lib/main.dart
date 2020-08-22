@@ -1,6 +1,5 @@
 import 'package:ctz_wtch/routes/routes.dart';
 import 'package:ctz_wtch/screens/login_screen.dart';
-// import 'package:ctz_wtch/screens/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
@@ -8,7 +7,12 @@ void main() {
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -30,11 +34,7 @@ class MyApp extends StatelessWidget {
             initialRoute: LogInScreen.id,
           );
         }
-        return Center(
-          child: CircularProgressIndicator(
-            backgroundColor: Colors.blue,
-          ),
-        );
+        return Center(child: CircularProgressIndicator());
       },
     );
   }
