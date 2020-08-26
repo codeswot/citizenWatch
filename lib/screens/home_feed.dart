@@ -1,3 +1,4 @@
+import 'package:ctz_wtch/screens/login_screen.dart';
 import 'package:ctz_wtch/screens/tabViews/news_view.dart';
 import 'package:ctz_wtch/screens/tabViews/post_view.dart';
 // import 'package:ctz_wtch/screens/user_profile.dart';
@@ -5,6 +6,8 @@ import 'package:ctz_wtch/widgets/custom_dialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:ctz_wtch/services/databaseService.dart';
+import 'package:ctz_wtch/constants.dart';
+// import 'package:cloud_firestore/cloud_firestore.dart';
 
 class HomeFeed extends StatefulWidget {
   static const String id = 'HomeFeed';
@@ -13,10 +16,14 @@ class HomeFeed extends StatefulWidget {
 }
 
 class _HomeFeedState extends State<HomeFeed> {
+  final _auth = FirebaseAuth.instance;
+  // final _firestore = FirebaseFirestore.instance;
   Future<User> email = DatabaseService().getUserEmail();
-  Future displayName = DatabaseService().getDoc('pSmagK2GfWZFJttoV2SonIYwKBk1');
-  Future<String> id = DatabaseService().getCurrentUID();
-  
+
+// Future<String> name() async{
+//   String fullName = await DatabaseService().getDoc(DatabaseService().getCurrentUID());
+//   return fullName;
+// }
   List<Widget> widgetList = [
     CtzwPostView(),
     CtzwNewsView(),
@@ -24,7 +31,7 @@ class _HomeFeedState extends State<HomeFeed> {
   @override
   initState(){
     super.initState();
-    print(id);
+    DatabaseService().getAllPost();      
   }
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -50,35 +57,45 @@ class _HomeFeedState extends State<HomeFeed> {
                       return CustomDialog(
                         image:
                             'https://avatars3.githubusercontent.com/u/40618838?s=460&v=4',
-                        name: 'Na mairo',
+                        // name: 'Na mairo',
                         email: '${snapshot.data.email}',
                         buttonText: "SIGNOUT",
-                        signOut: () {},
+                        signOut: () async {
+                          await _auth.signOut();
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => LogInScreen(),
+                            ),
+                          );
+                        },
                       );
                     },
                   ),
                 );
               },
-            )
+            ),
           ],
-          bottom: TabBar(tabs: [
-            Tab(
-              icon: Column(
-                children: [
-                  Icon(Icons.whatshot),
-                  Text('Posts'),
-                ],
+          bottom: TabBar(
+            tabs: [
+              Tab(
+                icon: Column(
+                  children: [
+                    Icon(Icons.whatshot),
+                    Text('Posts'),
+                  ],
+                ),
               ),
-            ),
-            Tab(
-              icon: Column(
-                children: [
-                  Icon(Icons.tv),
-                  Text('News'),
-                ],
+              Tab(
+                icon: Column(
+                  children: [
+                    Icon(Icons.tv),
+                    Text('News'),
+                  ],
+                ),
               ),
-            ),
-          ]),
+            ],
+          ),
         ),
         body: TabBarView(
           children: widgetList,

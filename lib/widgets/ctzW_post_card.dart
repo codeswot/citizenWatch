@@ -1,4 +1,13 @@
+import 'package:ctz_wtch/services/geolocation/geolocation_get.dart';
 import 'package:flutter/material.dart';
+
+LocationHelper myLocationHelper = LocationHelper();
+String myLocation;
+
+Future<String> getTheLocation() async {
+  myLocation = await myLocationHelper.getUserLocation();
+  return myLocation;
+}
 
 class CtzwPostCard extends StatelessWidget {
   const CtzwPostCard({
@@ -83,7 +92,7 @@ class CtzwPostCard extends StatelessWidget {
                   )
                 : ClipRRect(
                     borderRadius: BorderRadius.circular(5),
-                    child: Image.asset(
+                    child: Image.network(
                       postImage,
                       fit: BoxFit.cover,
                     ),
@@ -126,12 +135,20 @@ class CtzwPostCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              Text(
-                location,
-                style: TextStyle(
-                  color: Colors.grey,
-                  fontSize: 12.0,
-                ),
+              FutureBuilder(
+                future: getTheLocation(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return Text(
+                      '${snapshot.data}',
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontSize: 12.0,
+                      ),
+                    );
+                  }
+                  return Text('loading...');
+                },
               ),
               SizedBox(width: 5.0),
               Text(

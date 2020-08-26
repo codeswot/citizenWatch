@@ -1,4 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ctz_wtch/services/databaseService.dart';
 import 'package:flutter/material.dart';
+
+//Creating the instance of firebase firestore and users collection
+final usersCollection = FirebaseFirestore.instance.collection('users');
+
+//function that gets the full name of a registered user by his id
 
 class CustomDialog extends StatelessWidget {
   final String name, email, buttonText, image;
@@ -47,15 +54,20 @@ class CustomDialog extends StatelessWidget {
               child: Column(
                 children: [
                   SizedBox(height: 22),
-                  Text(
-                    name,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 21,
-                    ),
-                    textAlign: TextAlign.center,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+                  FutureBuilder(
+                    future: DatabaseService().getDoc(DatabaseService().getCurrentUID()),
+                    builder: (context, snapshot) {
+                      if (!snapshot.hasData) {
+                        return Text('loading...');
+                      }
+                      return Text(
+                        '${snapshot.data}',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20.0,
+                        ),
+                      );
+                    },
                   ),
                   Text(
                     email,
@@ -114,3 +126,14 @@ class Consts {
   static const double padding = 16.0;
   static const double avatarRadius = 66.0;
 }
+
+// Text(
+//                         '${snapshot.data}',
+//                         style: TextStyle(
+//                           fontWeight: FontWeight.bold,
+//                           fontSize: 21,
+//                         ),
+//                         textAlign: TextAlign.center,
+//                         maxLines: 1,
+//                         overflow: TextOverflow.ellipsis,
+//                       );

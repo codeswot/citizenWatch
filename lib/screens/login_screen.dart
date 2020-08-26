@@ -1,10 +1,12 @@
 import 'package:ctz_wtch/screens/home_feed.dart';
 import 'package:ctz_wtch/screens/register_screen.dart';
+import 'package:ctz_wtch/services/databaseService.dart';
 import 'package:ctz_wtch/widgets/button.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:ctz_wtch/constants.dart';
 
 class LogInScreen extends StatefulWidget {
   static const String id = 'LogInScreen';
@@ -163,7 +165,7 @@ class _LogInScreenState extends State<LogInScreen> {
                           });
                           final loggedInUser =
                               await _auth.signInWithEmailAndPassword(
-                                  email: email, password: password);
+                                email: email, password: password);
                           if (loggedInUser != null) {
                             Navigator.of(context).pushNamed(HomeFeed.id);
                           }

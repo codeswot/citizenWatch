@@ -1,9 +1,8 @@
 import 'package:ctz_wtch/screens/upload_screen.dart';
 import 'package:ctz_wtch/screens/video_play_screen.dart';
-import 'package:ctz_wtch/services/geolocation/geolocation_get.dart';
-import 'package:ctz_wtch/utils/text.dart';
 import 'package:ctz_wtch/widgets/ctzW_post_card.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class CtzwPostView extends StatefulWidget {
   const CtzwPostView({Key key}) : super(key: key);
@@ -12,76 +11,58 @@ class CtzwPostView extends StatefulWidget {
   _CtzwPostViewState createState() => _CtzwPostViewState();
 }
 
-LocationHelper myLocationHelper = LocationHelper();
-String myLocation;
-
-Future<String> getTheLocation() async {
-  myLocation = await myLocationHelper.getUserLocation();
-  return myLocation;
-}
-
 class _CtzwPostViewState extends State<CtzwPostView> {
+  final _firestore = FirebaseFirestore.instance;
   @override
   Widget build(BuildContext context) {
-    getTheLocation();
+    // getTheLocation();
 
-    return FutureBuilder(
-        future: getTheLocation(),
+    return Scaffold(
+      body: StreamBuilder<QuerySnapshot>(
+        stream: _firestore.collection('users').snapshots(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
-            return Container(
-              child: ListView.builder(
-                physics: BouncingScrollPhysics(),
-                itemBuilder: (BuildContext ctxt, int index) {
-                  return CtzwPostCard(
-                    userImage: 'images/profile.png',
-                    userName: 'Musa Damu',
-                    caption: captionTest1,
-                    location: 'loading location...',
-                    timeOfPost: '10 min ago',
-                    isVideo: false,
-                    postImage: 'images/lightning.jpg',
-                    videoPlayTap: () {
-                      Navigator.of(context).pushNamed(VideoPlaySCreen.id);
-                    },
-                  );
-                },
-                itemCount: 2,
-              ),
+            return Center(
+              child: CircularProgressIndicator(),
             );
           }
-          return Scaffold(
-            body: Container(
-              child: ListView.builder(
-                physics: BouncingScrollPhysics(),
-                itemBuilder: (BuildContext ctxt, int index) {
-                  return CtzwPostCard(
-                    userImage: 'images/profile.png',
-                    userName: 'Musa Damu',
-                    caption: captionTest1,
-                    location: myLocation ?? "",
-                    timeOfPost: '10 min ago',
-                    isVideo: false,
-                    postImage: 'images/lightning.jpg',
-                    videoPlayTap: () {
-                      Navigator.of(context).pushNamed(VideoPlaySCreen.id);
-                    },
-                  );
-                },
-                itemCount: 2,
-              ),
-            ),
-            floatingActionButton: FloatingActionButton(
-              child: Icon(
-                Icons.add,
-              ),
-              onPressed: () {
-                Navigator.of(context).pushNamed(
-                  UploadScreen.id,
-                );
+          final usersInformations = snapshot.data.docs;
+          List<CtzwPostCard> allPostWidgets = [];
+          for (var userInformation in usersInformations) {
+            final fullname = userInformation.data()['name'];
+            final newsPost = userInformation.data()['newsDescription'];
+            final singlePostWidget = CtzwPostCard(
+              userImage: '',
+              userName: '$fullname',
+              caption: '$newsPost',
+              timeOfPost: '10 min ago',
+              isVideo: false,
+              postImage: 'gs://citizenwatch-6de93.appspot.com/dribbble_1x.jpg',
+              videoPlayTap: () {
+                Navigator.of(context).pushNamed(VideoPlaySCreen.id);
               },
-            ),
+            );
+            if(newsPost == ''){
+              allPostWidgets.remove(singlePostWidget);
+            }
+            allPostWidgets.add(singlePostWidget);
+          }
+          return ListView(
+            physics: BouncingScrollPhysics(),
+            children: allPostWidgets,
           );
-        });
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(
+          Icons.add,
+        ),
+        onPressed: () {
+          Navigator.of(context).pushNamed(
+            UploadScreen.id,
+          );
+        },
+      ),
+    );
   }
 }

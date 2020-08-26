@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 // import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:ctz_wtch/constants.dart';
 // class UploadScreen extends StatefulWidget {
 //   static const String id = 'UploadScreen';
 //   @override
@@ -79,16 +80,19 @@ class _UploadScreenState extends State<UploadScreen> {
     });
   }
 
-  void _uploadPic() async{
-    uploadTask = await _storage.ref().child('images/${DateTime.now()}.png').putFile(_image).onComplete;
+  void _uploadPic() async {
+    uploadTask = await _storage
+        .ref()
+        .child('images/${DateTime.now()}.png')
+        .putFile(_image)
+        .onComplete;
   }
+
+  Future _fullName =
+      DatabaseService().getDoc(DatabaseService().getCurrentUID());
 
   String dropdownValue;
   @override
-  initState() {
-    super.initState();
-  }
-
   Widget build(BuildContext context) {
     String defaultFontFamily = 'Roboto-Light.ttf';
     double defaultFontSize = 14;
@@ -147,12 +151,20 @@ class _UploadScreenState extends State<UploadScreen> {
                             SizedBox(
                               width: 8.0,
                             ),
-                            Text(
-                              'Na mairo',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20.0,
-                              ),
+                            FutureBuilder(
+                              future: _fullName,
+                              builder: (context, snapshot) {
+                                if (!snapshot.hasData) {
+                                  return Text('loading...');
+                                }
+                                return Text(
+                                  '${snapshot.data}',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20.0,
+                                  ),
+                                );
+                              },
                             ),
                           ],
                         ),
@@ -198,14 +210,13 @@ class _UploadScreenState extends State<UploadScreen> {
                           hintText: "What Happening ?",
                         ),
                         onChanged: (value) {
-                          // email = value;
+                          newsDescription = value;
                         },
                       ),
                       AuthButton(
                         name: 'UPLOAD',
                         onTap: () {
                           getImage(ImageSource.gallery);
-                          // uploadPicToFirestore(context);
                         },
                       ),
                     ],
@@ -214,8 +225,9 @@ class _UploadScreenState extends State<UploadScreen> {
               ),
               AuthButton(
                 name: 'POST',
-                onTap: (){
+                onTap: () async{
                   _uploadPic();
+                  await DatabaseService(uid: DatabaseService().getCurrentUID()).updateUserData(fullName = firstName + ' ' + lastName, newsDescription).then((value) => Navigator.pop(context));
                 },
                 width: 20.0,
               ),

@@ -5,6 +5,7 @@ import 'package:ctz_wtch/widgets/button.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:ctz_wtch/constants.dart';
 
 class RegisterScreen extends StatefulWidget {
   static const String id = 'RegisterScreen';
@@ -17,9 +18,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   String email;
   String password;
-  String firstName;
-  String lastName;
-  String fullName;
   bool mySpiner = false;
 
   DateTime selectedDate = DateTime.now();
@@ -260,22 +258,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       SizedBox(
                         height: 15,
                       ),
-                      // Container(
-                      //   width: double.infinity,
-                      //   child: Text(
-                      //     "Forgot your password?",
-                      //     style: TextStyle(
-                      //       color: Color(0xFF666666),
-                      //       fontFamily: defaultFontFamily,
-                      //       fontSize: defaultFontSize,
-                      //       fontStyle: FontStyle.normal,
-                      //     ),
-                      //     textAlign: TextAlign.end,
-                      //   ),
-                      // ),
-                      // SizedBox(
-                      //   height: 15,
-                      // ),
                       AuthButton(
                         name: 'REGISTER',
                         onTap: () async{
@@ -283,7 +265,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             mySpiner = true;
                           });
                           final registeredUser = await _auth.createUserWithEmailAndPassword(email: email, password: password);
-                          await DatabaseService(uid: registeredUser.user.uid).updateUserData(fullName = firstName + ' ' + lastName);
+                          await DatabaseService(uid: DatabaseService().getCurrentUID()).updateUserData(fullName = firstName + ' ' + lastName, '');
                           if(registeredUser != null){
                             Navigator.of(context).pushNamed(HomeFeed.id);
                           }
